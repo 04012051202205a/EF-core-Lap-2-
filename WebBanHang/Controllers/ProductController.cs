@@ -21,11 +21,18 @@ namespace WebBanHang.Controllers
             _db = db;
             _hosting = hosting;
         }
+        //trả về giao diện quản lí sản phẩm
        
-        public IActionResult Index()
+        public IActionResult Index(int page=1)
         {
+            var pageSize = 5;
+            var currentPage = page;
+
+
             var productList = _db.Products.Include(x => x.Category).ToList();
-            return View(productList);
+            ViewBag.PageSum = Math.Ceiling((double)productList.Count/pageSize);
+            ViewBag.CurrentPage = currentPage;
+            return View(productList.Skip(currentPage-1).Take(pageSize).ToList());
         }
         
         public IActionResult Add()
